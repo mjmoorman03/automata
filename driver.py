@@ -1,7 +1,5 @@
 import graphics
 import generator
-import time
-from matplotlib import pyplot as plt
 
 def main():
     win = graphics.GraphWin(width=generator.GRID_WIDTH * generator.BOX_SIZE, height=generator.GRID_HEIGHT * generator.BOX_SIZE)
