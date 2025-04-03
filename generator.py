@@ -1,7 +1,9 @@
 import numpy as np
 
-GRID_WIDTH = 1001
-GRID_HEIGHT = 1000
+GRID_WIDTH = 191
+GRID_HEIGHT = 85
+
+BOX_SIZE = 7
 
 # we let the three boxes above be represented by integers according to which are filled (binary)
 
@@ -12,8 +14,8 @@ rules = {
     3: 0,
     4: 1,
     5: 0,
-    6: 1,
-    7: 0
+    6: 0,
+    7: 1
     }
 
 
@@ -23,6 +25,8 @@ class Board:
         self.height = height 
         self.width = width
         self.state = self._generate_initial_state()
+        self.stable = False
+        self.iterations = 0
 
 
     def getState(self):
@@ -39,13 +43,27 @@ class Board:
     def _next_state(self):
         # state is a numpy array of GRID_WIDTH x GRID_HEIGHT
         # we will use the rules to determine the next state
-        new_state = self.state.copy()
-        for i in range(1, self.height):
-            for j in range(self.width):
-                # get the state of the three boxes above
-                box1 = self.state[i-1][j]
-                box2 = self.state[i-1][j-1] if j > 0 else 0
-                box3 = self.state[i-1][j+1] if j < GRID_WIDTH - 1 else 0
-                ruleInput = (box1 << 2) | (box2 << 1) | box3
-                new_state[i][j] = rules[ruleInput]
-        self.state = new_state
+        # note that we only require previous line for new line
+        if self.stable:
+            return
+    
+        # get the state of the three boxes above
+        for j in range(self.width):
+            box1 = self.state[self.iterations][j]
+            box2 = self.state[self.iterations][j-1] if j > 0 else 0
+            box3 = self.state[self.iterations][j+1] if j < GRID_WIDTH - 1 else 0
+            ruleInput = (box1 << 2) | (box2 << 1) | box3
+            self.state[self.iterations+1][j] = rules[ruleInput]
+
+        if self.iterations == self.height - 2:
+            self.stable = True
+            return
+
+        self.iterations += 1
+
+
+    def step(self, steps=1):
+        for _ in range(steps):
+            self._next_state()
+        return self.state
+        
