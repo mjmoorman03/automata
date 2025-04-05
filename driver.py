@@ -12,7 +12,7 @@ def main():
             for j in range(generator.GRID_WIDTH):
                 currentState = board.getState()
                 if currentState[i][j] == 1:
-                    box = graphics.Rectangle(graphics.Point(generator.GRID_WIDTH-j, generator.GRID_HEIGHT-i), graphics.Point(generator.GRID_WIDTH-(j + 1), generator.GRID_HEIGHT-(i + 1)))
+                    box = graphics.Rectangle(graphics.Point(j, generator.GRID_HEIGHT-i), graphics.Point(j+1, generator.GRID_HEIGHT-(i + 1)))
                     box.setFill("black")
                     box.draw(win)
 

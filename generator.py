@@ -8,14 +8,14 @@ BOX_SIZE = 7
 # we let the three boxes above be represented by integers according to which are filled (binary)
 
 rules = {
-    0: 0,
-    1: 1,
-    2: 1,
-    3: 0,
-    4: 1,
-    5: 0,
-    6: 0,
-    7: 1
+    (0, 0, 0): 0,
+    (0, 0, 1): 1,
+    (0, 1, 0): 1,
+    (0, 1, 1): 0,
+    (1, 0, 0): 1,
+    (1, 0, 1): 1,
+    (1, 1, 0): 0,
+    (1, 1, 1): 1
     }
 
 
@@ -49,10 +49,10 @@ class Board:
     
         # get the state of the three boxes above
         for j in range(self.width):
-            box1 = self.state[self.iterations][j]
-            box2 = self.state[self.iterations][j-1] if j > 0 else 0
+            box2 = self.state[self.iterations][j]
+            box1 = self.state[self.iterations][j-1] if j > 0 else 0
             box3 = self.state[self.iterations][j+1] if j < GRID_WIDTH - 1 else 0
-            ruleInput = (box1 << 2) | (box2 << 1) | box3
+            ruleInput = (box1, box2, box3)
             self.state[self.iterations+1][j] = rules[ruleInput]
 
         if self.iterations == self.height - 2:
